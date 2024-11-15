@@ -31,7 +31,7 @@ export class ProjectController {
 
       if (!project) {
         const error = new Error('Cannot find the project');
-        res.status(400).json({ error: error.message });
+        res.status(404).json({ error: error.message });
         return;
       }
 
@@ -48,7 +48,7 @@ export class ProjectController {
 
       if (!project) {
         const error = new Error('Cannot find the project');
-        res.status(400).json({ error: error.message });
+        res.status(404).json({ error: error.message });
         return;
       }
       await project.save();
@@ -65,7 +65,7 @@ export class ProjectController {
 
       if (!project) {
         const error = new Error('Cannot find the project');
-        res.status(400).json({ error: error.message });
+        res.status(404).json({ error: error.message });
         return;
       }
       await project.deleteOne();
