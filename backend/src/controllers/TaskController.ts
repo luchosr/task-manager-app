@@ -41,12 +41,6 @@ export class TaskController {
 
   static updateTask = async (req: Request, res: Response) => {
     try {
-      if (req.task.project.toString() !== req.project.id) {
-        const error = new Error('Task does not belong to this project');
-        res.status(404).json({ error: error.message });
-        return;
-      }
-
       req.task.name = req.body.name;
       req.task.description = req.body.description;
       await req.task.save();
@@ -58,12 +52,6 @@ export class TaskController {
 
   static deleteTask = async (req: Request, res: Response) => {
     try {
-      if (req.task.project.toString() !== req.project.id) {
-        const error = new Error('Task does not belong to this project');
-        res.status(404).json({ error: error.message });
-        return;
-      }
-
       req.project.tasks = req.project.tasks.filter(
         (task) => task.toString() !== req.task.id.toString()
       );
