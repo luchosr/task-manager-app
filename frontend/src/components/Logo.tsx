@@ -1,3 +1,3 @@
 export default function Logo() {
-  return <img src="../../public/logo.svg" alt="Logotipo Uptask" />;
+  return <img src="/logo.svg" alt="Logotipo Uptask" />;
 }
