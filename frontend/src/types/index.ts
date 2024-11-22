@@ -2,16 +2,16 @@ import { z } from 'zod';
 
 type TaskStatus =
   | 'pending'
-  | 'on hold'
-  | 'in progress'
-  | 'under review'
+  | 'onHold'
+  | 'inProgress'
+  | 'underReview'
   | 'completed';
 
 export const taskStatusSchema = z.enum([
   'pending',
-  'on hold',
-  'in progress',
-  'under review',
+  'onHold',
+  'inProgress',
+  'underReview',
   'completed',
 ]);
 
