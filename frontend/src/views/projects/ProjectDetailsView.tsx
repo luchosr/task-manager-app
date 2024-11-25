@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import AddTaskModal from '@/components/tasks/AddTaskModal';
 import TaskList from '@/components/tasks/TaskList';
+import EditTaskData from '@/components/tasks/EditTaskData';
 
 export default function ProjectDetailsView() {
   const navigate = useNavigate();
@@ -38,6 +39,7 @@ export default function ProjectDetailsView() {
         </nav>
         <TaskList tasks={data.tasks} />
         <AddTaskModal />
+        <EditTaskData/>
       </>
     );
 }
