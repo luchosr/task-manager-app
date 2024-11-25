@@ -1,4 +1,4 @@
-import { AxiosError, isAxiosError } from 'axios';
+import { isAxiosError } from 'axios';
 import api from '@/lib/axios';
 import { Project, TaskFormData } from '../types';
 
