@@ -1,12 +1,5 @@
 import { z } from 'zod';
 
-type TaskStatus =
-  | 'pending'
-  | 'onHold'
-  | 'inProgress'
-  | 'underReview'
-  | 'completed';
-
 export const taskStatusSchema = z.enum([
   'pending',
   'onHold',
@@ -14,6 +7,7 @@ export const taskStatusSchema = z.enum([
   'underReview',
   'completed',
 ]);
+export type TaskStatus = z.infer<typeof taskStatusSchema>;
 
 export type Task = z.infer<typeof taskSchema>;
 
