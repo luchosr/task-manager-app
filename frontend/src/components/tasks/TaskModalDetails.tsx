@@ -12,11 +12,12 @@ import {
   Transition,
   TransitionChild,
 } from '@headlessui/react';
-import { useQuery } from '@tanstack/react-query';
-import { getTaskById } from '@/api/TaskAPI';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { getTaskById, updateStatus } from '@/api/TaskAPI';
 import { toast } from 'react-toastify';
 import { formatDate } from '@/utils/utils';
 import { statusTranslation } from '@/locales/es';
+import { TaskStatus } from '@/types/index';
 
 export default function TaskModalDetails() {
   const params = useParams();
@@ -34,6 +35,24 @@ export default function TaskModalDetails() {
     queryFn: () => getTaskById({ projectId, taskId }),
     enabled: !!taskId,
   });
+
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationFn: updateStatus,
+    onError: (error) => toast.error(error.message),
+    onSuccess: (data) => {
+      toast.success(data);
+      queryClient.invalidateQueries({ queryKey: ['project', projectId] });
+      queryClient.invalidateQueries({ queryKey: ['task', taskId] });
+    },
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const status = e.target.value as TaskStatus;
+    const data = { projectId, taskId, status };
+    mutate(data);
+  };
 
   if (isError) {
     toast.error(error?.message, { toastId: 'task-modal-error' });
@@ -98,6 +117,7 @@ export default function TaskModalDetails() {
                         id=""
                         className="w-full p-3 bg-white border border-gray-300"
                         defaultValue={data.status}
+                        onChange={handleChange}
                       >
                         {Object.entries(statusTranslation).map(
                           ([key, value]) => (
