@@ -5,12 +5,6 @@ export class ProjectController {
   static createProject = async (req: Request, res: Response) => {
     const project = new Project(req.body);
 
-    // if (true) {
-    //   const error = new Error('Cannot find the project');
-    //   res.status(404).json({ error: error.message });
-    //   return;
-    // }
-
     try {
       await project.save();
       res.send('Project Created');
