@@ -1,6 +1,9 @@
+import { AuthEmail } from './../emails/AuthEmail';
 import type { Request, Response } from 'express';
 import User from '../models/User';
 import { hashPassword } from '../utils/auth';
+import Token from '../models/Token';
+import { generateToken } from '../utils/token';
 
 export class AuthController {
   static createAccount = async (req: Request, res: Response) => {
@@ -15,7 +18,17 @@ export class AuthController {
       }
       const user = new User(req.body);
       user.password = await hashPassword(password);
-      await user.save();
+
+      const token = new Token();
+      token.token = generateToken();
+      token.user = user.id;
+
+      AuthEmail.sendConfirmationEmail({
+        email: user.email,
+        name: user.name,
+        token: token.token,
+      });
+      await Promise.allSettled([user.save(), token.save()]);
 
       res.send('User Created, please check your email for confirmation');
     } catch (error) {
