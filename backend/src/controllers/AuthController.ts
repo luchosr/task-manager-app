@@ -35,4 +35,24 @@ export class AuthController {
       res.status(500).json({ error: 'Ups! Something went wrong' });
     }
   };
+
+  static confirmAccount = async (req: Request, res: Response) => {
+    try {
+      const { token } = req.body;
+      const tokenExists = await Token.findOne({ token });
+      if (!tokenExists) {
+        const error = new Error('Token not valid');
+        res.status(401).json({ error: error.message });
+        return;
+      }
+
+      const user = await User.findById(tokenExists.user);
+      user.confirmed = true;
+      await Promise.allSettled([user.save(), tokenExists.deleteOne()]);
+
+      res.send('User confirmed successfully');
+    } catch (error) {
+      res.status(500).json({ error: 'Ups! Something went wrong' });
+    }
+  };
 }
