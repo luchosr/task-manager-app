@@ -15,6 +15,7 @@ export class AuthEmail {
       text: `Please click on the following link to confirm your account: `,
       html: `<p>User: ${user.name} has created an account, please add 
        the following token to confirm your account: ${user.token}</p>
+       or you can click the following link: <a href="${process.env.FRONTEND_URL}/auth/confirm-account">Confirm Account</a>
       <p>This link will expire in 10 minutes</p>`,
     });
     console.log('Email sent', info.messageId);
