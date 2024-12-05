@@ -33,7 +33,7 @@ export class AuthController {
 
       await Promise.allSettled([user.save(), token.save()]);
 
-      res.send('User Created, please check your email for confirmation');
+      res.send('Account created, please check your email for confirmation');
     } catch (error) {
       res.status(500).json({ error: 'Ups! Something went wrong' });
     }
@@ -53,9 +53,9 @@ export class AuthController {
       user.confirmed = true;
       await Promise.allSettled([user.save(), tokenExists.deleteOne()]);
 
-      res.send('User confirmed successfully');
+      res.send('Account confirmed successfully');
     } catch (error) {
-      res.status(500).json({ error: 'Ups! Something went wrong' });
+      res.status(500).json({ error: 'Oops! Something went wrong' });
     }
   };
 
@@ -97,7 +97,7 @@ export class AuthController {
       }
       res.send('Login successful');
     } catch (error) {
-      res.status(500).json({ error: 'Ups! Something went wrong' });
+      res.status(500).json({ error: 'Oops! Something went wrong' });
     }
   };
 
