@@ -37,10 +37,10 @@ router.post(
 );
 
 router.post(
-  '/request-code',
+  '/forgot-password',
   body('email').isEmail().withMessage('Not valid email'),
   handleInputErrors,
-  AuthController.requestConfirmationCode
+  AuthController.forgotPassword
 );
 
 export default router;
