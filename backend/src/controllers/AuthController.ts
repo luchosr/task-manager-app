@@ -11,11 +11,13 @@ export class AuthController {
       const { password, email } = req.body;
 
       const userExists = await User.findOne({ email });
+
       if (userExists) {
         const error = new Error('User already exists');
         res.status(409).json({ error: error.message });
         return;
       }
+
       const user = new User(req.body);
       user.password = await hashPassword(password);
 
@@ -94,6 +96,42 @@ export class AuthController {
         return;
       }
       res.send('Login successful');
+    } catch (error) {
+      res.status(500).json({ error: 'Ups! Something went wrong' });
+    }
+  };
+
+  static requestConfirmationCode = async (req: Request, res: Response) => {
+    try {
+      const { email } = req.body;
+
+      const user = await User.findOne({ email });
+
+      if (!user) {
+        const error = new Error('This user does not exist');
+        res.status(409).json({ error: error.message });
+        return;
+      }
+
+      if (user.confirmed) {
+        const error = new Error('User already confirmed');
+        res.status(403).json({ error: error.message });
+        return;
+      }
+
+      const token = new Token();
+      token.token = generateToken();
+      token.user = user.id;
+
+      AuthEmail.sendConfirmationEmail({
+        email: user.email,
+        name: user.name,
+        token: token.token,
+      });
+
+      await Promise.allSettled([user.save(), token.save()]);
+
+      res.send('A new token has been sent to your email');
     } catch (error) {
       res.status(500).json({ error: 'Ups! Something went wrong' });
     }
