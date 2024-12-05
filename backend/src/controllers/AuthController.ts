@@ -136,4 +136,33 @@ export class AuthController {
       res.status(500).json({ error: 'Ups! Something went wrong' });
     }
   };
+
+  static forgotPassword = async (req: Request, res: Response) => {
+    try {
+      const { email } = req.body;
+
+      const user = await User.findOne({ email });
+
+      if (!user) {
+        const error = new Error('This user does not exist');
+        res.status(409).json({ error: error.message });
+        return;
+      }
+
+      const token = new Token();
+      token.token = generateToken();
+      token.user = user.id;
+      await token.save();
+
+      AuthEmail.sendPasswordResetToken({
+        email: user.email,
+        name: user.name,
+        token: token.token,
+      });
+
+      res.send('Please, check your email for further instructions');
+    } catch (error) {
+      res.status(500).json({ error: 'Ups! Something went wrong' });
+    }
+  };
 }
