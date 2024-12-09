@@ -29,7 +29,7 @@ export class AuthEmail {
       text: `Please click on the following link to reset your password: `,
       html: `<p>User: ${user.name}, please add 
        the following token to confirm your password reset: ${user.token}</p>
-       or you can click the following link: <a href="${process.env.FRONTEND_URL}/auth/forgot-password">Reset Password</a>
+       or you can click the following link: <a href="${process.env.FRONTEND_URL}/auth/new-password">Reset Password</a>
       <p>This link will expire in 10 minutes</p>`,
     });
     console.log('Email sent', info.messageId);
