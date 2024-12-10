@@ -1,14 +1,16 @@
 import { Router } from 'express';
 import { body, param } from 'express-validator';
-import { ProjectController } from '../controllers/ProjectController';
-import { handleInputErrors } from '../middleware/validation';
 import { TaskController } from '../controllers/TaskController';
+import { ProjectController } from '../controllers/ProjectController';
+import { authenticate } from '../middleware/auth';
 import { projectExists } from '../middleware/project';
+import { handleInputErrors } from '../middleware/validation';
 import { taskBelongsToProject, taskExists } from '../middleware/task';
 
 const router = Router();
 router.post(
   '/',
+  authenticate,
   body('projectName').not().isEmpty().withMessage('Project name is required'),
   body('clientName').not().isEmpty().withMessage('Client name is required'),
   body('description').not().isEmpty().withMessage('Description is required'),
