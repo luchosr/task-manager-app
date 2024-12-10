@@ -21,7 +21,7 @@ export default function LoginView() {
     mutationFn: authenticateUser,
     onError: (error) => toast.error(error.message),
     onSuccess: (data) => {
-      toast.success(data);
+      toast.success('Logging in, welcome back!');
     },
   });
 
