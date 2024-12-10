@@ -97,7 +97,7 @@ export class AuthController {
         return;
       }
 
-      const token = generateJwt();
+      const token = generateJwt({ id: user.id });
 
       res.send(token);
     } catch (error) {
