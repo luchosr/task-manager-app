@@ -8,9 +8,9 @@ import { handleInputErrors } from '../middleware/validation';
 import { taskBelongsToProject, taskExists } from '../middleware/task';
 
 const router = Router();
+router.use(authenticate);
 router.post(
   '/',
-  authenticate,
   body('projectName').not().isEmpty().withMessage('Project name is required'),
   body('clientName').not().isEmpty().withMessage('Client name is required'),
   body('description').not().isEmpty().withMessage('Description is required'),
