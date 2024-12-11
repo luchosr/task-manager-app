@@ -4,6 +4,8 @@ import Project from '../models/Project';
 export class ProjectController {
   static createProject = async (req: Request, res: Response) => {
     const project = new Project(req.body);
+
+    project.manager = req.user.id;
     console.log(req.user);
     try {
       await project.save();
@@ -15,7 +17,9 @@ export class ProjectController {
 
   static getAllProjects = async (req: Request, res: Response) => {
     try {
-      const projects = await Project.find({});
+      const projects = await Project.find({
+        $or: [{ manager: { $in: req.user.id } }],
+      });
       res.json(projects);
     } catch (error) {
       console.log(error);
@@ -36,6 +40,12 @@ export class ProjectController {
         return;
       }
 
+      if (project.manager.toString() !== req.user.id.toString()) {
+        const error = new Error('Unauthorized');
+        res.status(401).json({ error: error.message });
+        return;
+      }
+
       res.json(project); // Enviar la respuesta pero no devolverla
     } catch (error) {
       console.log(error);
@@ -52,6 +62,13 @@ export class ProjectController {
         res.status(404).json({ error: error.message });
         return;
       }
+
+      if (project.manager.toString() !== req.user.id.toString()) {
+        const error = new Error('Only the manager can update the project');
+        res.status(401).json({ error: error.message });
+        return;
+      }
+
       project.clientName = req.body.clientName;
       project.projectName = req.body.projectName;
       project.description = req.body.description;
@@ -72,6 +89,13 @@ export class ProjectController {
         res.status(404).json({ error: error.message });
         return;
       }
+
+      if (project.manager.toString() !== req.user.id.toString()) {
+        const error = new Error('Only the manager can delete the project');
+        res.status(401).json({ error: error.message });
+        return;
+      }
+
       await project.deleteOne();
 
       res.send('Project Removed');
