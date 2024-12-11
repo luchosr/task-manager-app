@@ -22,7 +22,6 @@ export const authenticate = async (
     res.status(401).json({ error: error.message });
   }
   const token = bearer.split(' ')[1];
-  console.log(token);
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     console.log(decoded);
