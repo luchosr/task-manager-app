@@ -20,8 +20,11 @@ export const authenticate = async (
   if (!bearer) {
     const error = new Error('Unauthorized');
     res.status(401).json({ error: error.message });
+    return;
   }
-  const token = bearer.split(' ')[1];
+
+  const [, token] = bearer.split(' ');
+
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     console.log(decoded);
