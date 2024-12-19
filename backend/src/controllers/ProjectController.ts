@@ -41,7 +41,7 @@ export class ProjectController {
       }
 
       if (project.manager.toString() !== req.user.id.toString()) {
-        const error = new Error('Unauthorized');
+        const error = new Error('User is not valid to do this action');
         res.status(401).json({ error: error.message });
         return;
       }
@@ -91,7 +91,7 @@ export class ProjectController {
       }
 
       if (project.manager.toString() !== req.user.id.toString()) {
-        const error = new Error('Only the manager can delete the project');
+        const error = new Error('Only the manager can delete this project');
         res.status(401).json({ error: error.message });
         return;
       }
