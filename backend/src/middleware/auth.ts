@@ -33,6 +33,7 @@ export const authenticate = async (
 
       if (user) {
         req.user = user;
+        next();
       } else {
         res.status(500).json({ error: 'Token is not valid' });
       }
@@ -40,6 +41,4 @@ export const authenticate = async (
   } catch (error) {
     res.status(500).json({ error: 'Token is not valid' });
   }
-
-  next();
 };
