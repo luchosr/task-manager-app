@@ -66,6 +66,7 @@ export const projectSchema = z.object({
   clientName: z.string(),
   description: z.string(),
   status: z.string(),
+  manager: z.string(userSchema.pick({ _id: true })),
 });
 
 export const dashBoardProjectSchema = z.array(
@@ -74,6 +75,7 @@ export const dashBoardProjectSchema = z.array(
     projectName: true,
     clientName: true,
     description: true,
+    manager: true,
   })
 );
 export type Project = z.infer<typeof projectSchema>;
