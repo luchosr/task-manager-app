@@ -41,6 +41,7 @@ export default function AddTaskModal() {
   const { mutate } = useMutation({
     mutationFn: createTask,
     onError: (error) => toast.error(error.message),
+
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['editProject', projectId] });
       toast.success(data);
