@@ -32,10 +32,15 @@ export class TaskController {
         res.status(404).json({ error: error.message });
         return;
       }
-      const task = await Task.findById(req.task.id).populate({
-        path: 'completedBy.user',
-        select: 'email name',
-      });
+      const task = await Task.findById(req.task.id)
+        .populate({
+          path: 'completedBy.user',
+          select: 'id email name',
+        })
+        .populate({
+          path: 'notes',
+          populate: { path: 'createdBy', select: 'id email name' },
+        });
       res.json(task);
     } catch (error) {
       res.status(500).json({ error: 'Ups! Something went wrong' });
