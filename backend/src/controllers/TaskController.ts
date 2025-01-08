@@ -1,5 +1,4 @@
 import type { Request, Response } from 'express';
-import Project from '../models/Project';
 import Task from '../models/Task';
 
 export class TaskController {
@@ -33,7 +32,11 @@ export class TaskController {
         res.status(404).json({ error: error.message });
         return;
       }
-      res.json(req.task);
+      const task = await Task.findById(req.task.id).populate({
+        path: 'completedBy.user',
+        select: 'email name',
+      });
+      res.json(task);
     } catch (error) {
       res.status(500).json({ error: 'Ups! Something went wrong' });
     }
@@ -68,6 +71,11 @@ export class TaskController {
     try {
       const { status } = req.body;
       req.task.status = status;
+      const data = {
+        user: req.user.id,
+        status,
+      };
+      req.task.completedBy.push(data);
       await req.task.save();
       res.send('Task status updated successfully');
     } catch (error) {
