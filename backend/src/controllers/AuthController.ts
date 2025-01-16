@@ -211,4 +211,51 @@ export class AuthController {
     res.json(req.user);
     return;
   };
+
+  static updateProfile = async (req: Request, res: Response) => {
+    const { name, email } = req.body;
+
+    const userExists = await User.findOne({ email });
+
+    if (userExists && userExists.id.toString() !== req.user.id.toString()) {
+      const error = new Error('User already exists');
+      res.status(409).json({ error: error.message });
+      return;
+    }
+    req.user.name = name;
+    req.user.email = email;
+
+    try {
+      await req.user.save();
+      res.send('Profile updated successfully');
+    } catch (error) {
+      res.status(500).json({ error: 'Ups! Something went wrong' });
+    }
+  };
+
+  static updateCurrentUserPassword = async (req: Request, res: Response) => {
+    const { current_password, password } = req.body;
+
+    const user = await User.findById(req.user.id);
+
+    const isPasswordCorrect = await checkPassword(
+      current_password,
+      user.password
+    );
+
+    if (!isPasswordCorrect) {
+      const error = new Error('Incorrect Password');
+      res.status(401).json({ error: error.message });
+      return;
+    }
+
+    try {
+      user.password = await hashPassword(password);
+      await user.save();
+
+      res.send('Password updated successfully');
+    } catch (error) {
+      res.status(500).json({ error: 'Ups! Something went wrong' });
+    }
+  };
 }
