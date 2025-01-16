@@ -69,4 +69,32 @@ router.post(
 
 router.get('/user', authenticate, AuthController.user);
 
+router.put(
+  '/profile',
+  authenticate,
+  body('name').notEmpty().withMessage('Name is required'),
+  body('email').isEmail().withMessage('Not valid email'),
+  handleInputErrors,
+  AuthController.updateProfile
+);
+
+router.post(
+  '/update-password',
+  authenticate,
+  body('current_password')
+    .notEmpty()
+    .withMessage('Current password is required'),
+  body('password')
+    .isLength({ min: 8 })
+    .withMessage('Password needs to be at least 8 characters long'),
+  body('password_confirmation').custom((value, { req }) => {
+    if (value !== req.body.password) {
+      throw new Error('Passwords do not match');
+    }
+    return true;
+  }),
+  handleInputErrors,
+  AuthController.updateCurrentUserPassword
+);
+
 export default router;
