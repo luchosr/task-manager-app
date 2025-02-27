@@ -1,4 +1,5 @@
 import {
+  CheckPasswordForm,
   ForgotPasswordForm,
   NewPasswordForm,
   RequestConfirmationCodeForm,
@@ -110,6 +111,19 @@ export async function getUser() {
     if (response.success) {
       return response.data;
     }
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error);
+    }
+  }
+}
+
+export async function checkPassword(formatData: CheckPasswordForm) {
+  try {
+    const url = '/auth/check-password';
+
+    const { data } = await api.post<string>(url, formatData);
+    return data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data.error);
