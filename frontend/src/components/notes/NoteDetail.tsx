@@ -4,7 +4,7 @@ import { Note } from '@/types/index';
 import { formatDate } from '@/utils/utils';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 type NoteDetailProps = {
@@ -16,7 +16,6 @@ export default function NoteDetail({ note }: NoteDetailProps) {
   const canDelete = useMemo(() => data?._id === note.createdBy._id, [data]);
 
   const params = useParams();
-  const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
 
