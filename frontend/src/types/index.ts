@@ -27,7 +27,7 @@ export type UpdateCurrentUserPasswordForm = Pick<
 export type RequestConfirmationCodeForm = Pick<Auth, 'email'>;
 
 export type ConfirmToken = Pick<Auth, 'token'>;
-
+export type CheckPasswordForm = Pick<Auth, 'password'>;
 /** User **/
 
 export const userSchema = authSchema
